@@ -1,5 +1,5 @@
 ; Filename: EXER13.ASM
-; Display August 2025 Calendar using ACII characters
+; Display August 2025 Calendar using ASCII characters
 ; Name: Helge Justine O. Dano
 ; Date: August 25, 2025
 
