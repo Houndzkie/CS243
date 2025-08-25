@@ -29,7 +29,6 @@ main1:
 
     mov dx, offset msg3 ; print text
     int 21h
-    int 10h
 
 
     mov dx, offset msg4 ; print text

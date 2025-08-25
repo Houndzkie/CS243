@@ -1,7 +1,7 @@
 ; Filename: EXER12.ASM
 ; Display a duck with blinking eyes
 ; Name: Helge Justine O. Dano
-; Date: August 22, 2025
+; Date: August 24, 2025
 
 .model small
 .code
@@ -14,29 +14,29 @@ start:
     mov cx, 14
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
      ; line 2
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -46,52 +46,52 @@ start:
     mov cx, 4
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -101,24 +101,25 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
+    
  ; line 3
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -128,57 +129,57 @@ start:
     mov cx, 6
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -188,24 +189,24 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
  ; line 4
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -215,7 +216,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -225,7 +226,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -235,8 +236,8 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
-    mov cl, 84h
+     mov ah, 02h
+    mov cl, 03h
     mov dl, cl
     int 21h
 
@@ -245,42 +246,42 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -291,14 +292,14 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
  ; line 5
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -308,18 +309,18 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -329,52 +330,52 @@ start:
     mov cx, 5
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -384,19 +385,19 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
 ; line 6
 
- mov ah, 02h;
+ mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -408,17 +409,17 @@ start:
     int 10h
 
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -429,47 +430,47 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -479,29 +480,29 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 7
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -511,17 +512,17 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -532,7 +533,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -543,17 +544,17 @@ start:
     mov cx, 3
     int 10h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -564,7 +565,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -575,12 +576,12 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -590,24 +591,24 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 8
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -617,42 +618,42 @@ start:
     mov cx, 8
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -662,7 +663,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -672,12 +673,12 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -687,19 +688,19 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 9
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -709,22 +710,22 @@ start:
     mov cx, 4
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -734,7 +735,7 @@ start:
     mov cx, 4
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -744,17 +745,17 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -764,7 +765,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -774,17 +775,17 @@ start:
     mov cx, 2
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -794,19 +795,19 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 10
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -816,27 +817,27 @@ start:
     mov cx, 5
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -846,17 +847,17 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -866,22 +867,22 @@ start:
     mov cx, 3
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -891,19 +892,19 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 11
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -913,63 +914,63 @@ start:
     mov cx,11
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -979,24 +980,24 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 12
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -1006,57 +1007,57 @@ start:
     mov cx, 9
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -1066,29 +1067,29 @@ start:
     mov cx, 100
     int 10h
     
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 0Ah
     mov dl, cl
     int 21h
 
     ; line 13
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -1098,52 +1099,52 @@ start:
     mov cx, 7
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-    mov ah, 02h;
+    mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h

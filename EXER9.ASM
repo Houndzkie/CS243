@@ -13,12 +13,12 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 'I'
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -28,12 +28,12 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl,  03h
     mov dl, cl
     int 21h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, ' '
     mov dl, cl
     int 21h
@@ -43,7 +43,7 @@ start:
     mov cx, 1
     int 10h
 
-     mov ah, 02h;
+     mov ah, 02h
     mov cl, 'U'
     mov dl, cl
     int 21h
