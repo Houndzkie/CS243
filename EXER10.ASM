@@ -1,4 +1,4 @@
-; Filename: EXER12.ASM
+; Filename: EXER10.ASM
 ; Display a duck with blinking eyes
 ; Name: Helge Justine O. Dano
 ; Date: August 24, 2025

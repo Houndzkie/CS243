@@ -1,4 +1,4 @@
-; Filename: EXER7.ASM
+; Filename: EXER8.ASM
 ; Display colored patterns (big cross) using just spaces
 ; Name: Helge Justine O. Dano
 ; Date: August 22, 2025

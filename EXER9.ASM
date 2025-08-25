@@ -1,4 +1,4 @@
-; Filename: EXER7.ASM
+; Filename: EXER9.ASM
 ; Display emojis and blinking characters (blinking red heart)
 ; Name: Helge Justine O. Dano
 ; Date: August 22, 2025
