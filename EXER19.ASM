@@ -10,7 +10,7 @@
     nam db        'Name$'
     first db      '  First$'
     last db       '  Last$'
-    birth db      'Date of Birth               Email                 Grade          $'
+    birth db      'Date of Birth          Email                  Grade$'
     email db      'Email$'
     grade db      'Grade$'
     address db    'Address$'
@@ -622,7 +622,257 @@ main1:
 
      mov ah, 09h
     mov bl, 7fh ; print color
-    mov cx, 65
+    mov cx, 19
+    int 10h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+    
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 09h
+    mov bl, 22h ; print color
+    mov cx, 4
+    int 10h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 09h
+    mov bl, 7fh ; print color
+    mov cx, 19
+    int 10h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 09h
+    mov bl, 22h ; print color
+    mov cx, 4
+    int 10h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 02h
+    mov cl, ' '
+    mov dl, cl
+    int 21h
+
+     mov ah, 09h
+    mov bl, 7fh ; print color
+    mov cx, 18
     int 10h
 
     mov ah, 02h
@@ -1309,7 +1559,7 @@ main1:
     int 21h
 
       mov ah, 09h
-    mov bl, 20h ; print color
+    mov bl, 7fh ; print color
     mov cx, 6
     int 10h
 
