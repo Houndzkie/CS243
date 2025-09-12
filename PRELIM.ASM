@@ -11,9 +11,9 @@
     password db  '  Password                                                          $'
     remember db  ' Remember me for 30 days$'
     forgot db    '                          Forgot password$'
-    signup1 db    '                               Sign up                              $'
+    signup1 db   '                               Sign up                              $'
     signin db    '                        Sign in with Google                         $'
-    signup2 db 'Sign up$'
+    signup2 db   'Sign up$'
     noaccount db "                        Don't have an account?  $"
     nam db       '     Created by: HELGE JUSTINE O. DANO$'
 
