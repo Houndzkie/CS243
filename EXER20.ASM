@@ -23,8 +23,8 @@ ProgramStart:
     mov bx,0 ; standard input handle
     mov cx,MAXIMUM_STRING_LENGTH ; read of to maximum number of characters
 
-    mov dx,OFFSET StringINPUT ; store the string here
-    int 21 ; get the string
+    mov dx,OFFSET StringInput ; store the string here
+    int 21h ; get the string
     and ax,ax ; were any charcter read?
     jz Done ; no, so you're done
     mov cx,ax ; put the string length in CX where
@@ -37,7 +37,7 @@ ProgramStart:
     mov ah,40h ; DOs write form handle function
     mov bx,1 ; standard output handle
     mov dx,OFFSET StringInput ; prepare to print the string
-    int 21 ; print the string
+    int 21h ; print the string
 
 Done:
     mov ah,4ch ; DOS terminbate program function

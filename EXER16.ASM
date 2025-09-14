@@ -10,7 +10,7 @@ String1 DB 'Line1',0dh,0ah,'$'
 String2 DB 'Line2',0dh,0ah,'$'
 String3 DB 'Line3',0dh,0ah,'$'
 ; carriage return (ASCII code 0Dh) positions the cursor to the left side of the current line of characters
-; line feed (ASCII code 0Aj) moves the cursor down one line on the output device.
+; line feed (ASCII code 0Ah) moves the cursor down one line on the output device.
 
 .CODE
 ProgramStart:

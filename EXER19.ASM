@@ -19,7 +19,7 @@ ProgramStart:
     mov ax,@data
     mov ds,ax ; set DS to point to data segment
     mov dx,OFFSET TimePrompt ; point to the time prompt
-    mov ah,9 ; DOS print stringf function
+    mov ah,9 ; DOS print string function
     int 21h ; display time prompt
 
     mov ah,1 ; DOS get character function
@@ -36,7 +36,7 @@ IsAfternoon:
     jmp DisplayGreeting ; point to the afternoon greeting
 
 IsMorning:
-    mov dx,OFFSET GoodMorningMessage ; pont to before noon greeeting
+    mov dx,OFFSET GoodMorningMessage ; point to before noon greeeting
 
 DisplayGreeting:
     mov ah,9 ; DOS print string function
