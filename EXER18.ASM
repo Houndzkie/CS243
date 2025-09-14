@@ -1,4 +1,4 @@
-; Filename: EXER18.AS<
+; Filename: EXER18.ASM
 ; Programmer name: Helge Justine O. Dano
 ; Date; September 12, 2025
 ; Description: This assembly language program will continuously

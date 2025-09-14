@@ -1,4 +1,4 @@
-; Filename: EXER19.AS<
+; Filename: EXER19.ASM
 ; Programmer name: Helge Justine O. Dano
 ; Date: September 12, 2025
 ; Description: This assembly language program will get character input and
