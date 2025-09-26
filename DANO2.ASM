@@ -1,7 +1,7 @@
-; Filename: DANO.ASM
+; Filename: DANO2.ASM
 ; Programmer Name: Helge Justine O. Dano
-; Date: September 19, 2025
-; Description: Fishbook Account Registration
+; Date: September 26, 2025
+; Description: Fishbook Account Registration with Background Color
  
 .model small
 .stack 100h
@@ -15,12 +15,18 @@
     enterPassword db 13,10,'Enter Password: $'
 
     ; inputs
-    names    db 100,?,100 DUP('$')
-    birthday db 100,?,100 DUP('$')
-    gender   db 100,?,100 DUP('$')
-    email    db 100,?,100 DUP('$')
-    pass     db 100,?,100 DUP('$')
-; ask for Password
+    names    db 100,?,100 DUP(' ')
+    birthday db 100,?,100 DUP(' ')
+    gender   db 100,?,100 DUP(' ')
+    email    db 100,?,100 DUP(' ')
+    pass     db 100,?,100 DUP(' ')
+    color    db 100,?,100 DUP(' ')
+
+    ; ask for background color
+    prompt db "How do you like to display the summary table?",10,"1 - blue background",10,"2 - red background",10,"Enter your choice: $"
+    invalid db 13,10,10,"INVALID INPUT!$"
+
+    ; ask for Password
     ; display
     review       db 13,10,10,'Please review account registration details below:',10,'$'
     top          db 13,   218,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,194,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191,10,'$'
@@ -36,6 +42,7 @@
     submit db 'SUBMIT$'
     cancel db 'CANCEL$'
     edit   db 'EDIT$'
+    btnRow db ?
 
 .code
 main: 
@@ -90,23 +97,67 @@ main:
     lea dx, pass
     int 21h
 
-    ; show display
+    ; ask for background color
+    mov ah, 02h
+    mov cl, 0Ah
+    mov dl, cl
+    int 21h
+    mov ah, 02h
+    mov cl, 0Ah
+    mov dl, cl
+    int 21h
+    mov ah, 9
+    lea dx, prompt
+    int 21h
+    mov ah, 0Ah
+    lea dx, color
+    int 21h
+
+    ; ----------------------------
+    ; Decide based on color choice
+    ; ----------------------------
+    mov al, [color+2]    ; first char of input
+
+    cmp al, '1'
+    je BlueTable
+    cmp al, '2'
+    je RedTable
+    jmp InvalidChoice
+
+BlueTable:
+    mov bl, 1Fh          ; blue background, white text
+    jmp ShowTable
+
+RedTable:
+    mov bl, 4Fh          ; red background, white text
+    jmp ShowTable
+
+InvalidChoice:
+    mov ah, 9
+    lea dx, invalid
+    int 21h
+
+    mov byte ptr [btnRow], 15   ; put buttons just below the invalid text
+    jmp ShowButtons
+
+ShowTable:
+  ; show display
     mov ah, 9
     lea dx, review
     int 21h
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, top
     int 21h
 
     ; show name
     mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+    mov ah, 09h
+mov cx, 79
+int 10h
 
     mov ah, 9
     lea dx, showName
@@ -114,18 +165,18 @@ main:
     lea dx, names
     call PrintInput
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, mid
     int 21h
 
     ; show birthday
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
 
     mov ah, 9
     lea dx, showBirthday
@@ -133,18 +184,18 @@ main:
     lea dx, birthday
     call PrintInput
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, mid
     int 21h
 
     ; show gender
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+    mov ah, 09h
+mov cx, 79
+int 10h
 
     mov ah, 9
     lea dx, showGender
@@ -152,18 +203,18 @@ main:
     lea dx, gender
     call PrintInput
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, mid
     int 21h
 
     ; show email
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+  mov ah, 09h
+mov cx, 79
+int 10h
 
     mov ah, 9
     lea dx, showEmail
@@ -171,18 +222,18 @@ main:
     lea dx, email
     call PrintInput
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+    mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, mid
     int 21h
 
     ; show password
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+    mov ah, 09h
+mov cx, 79
+int 10h
 
     mov ah, 9
     lea dx, showPassword
@@ -190,22 +241,25 @@ main:
     lea dx, pass
     call PrintInput
      mov ah, 09h
-    mov bl, 1fh ; print color
-    mov cx, 79
-    int 10h
+    mov ah, 09h
+mov cx, 79
+int 10h
     mov ah, 9
     lea dx, bot
     int 21h
-    mov ah, 02h
-    mov cl, 0Ah
-    mov dl, cl
-    int 21h
 
+    mov byte ptr [btnRow], 24   ; put buttons just below the invalid text
+    jmp ShowButtons
+
+ShowButtons:
     ; -----------------------------
     ; show buttons (centered below)
     ; -----------------------------
     ; move cursor to row (adjust dh) and column (dl) before printing
-
+    mov ah, 09h
+    mov bl, 00h ; print color
+    mov cx, 79
+    int 10h
     mov ah, 02H
     mov cl, 0Ah
     mov dl, cl
@@ -217,7 +271,7 @@ main:
     int 10h
     mov ah, 2
     mov bh, 0
-    mov dh, 20       ; row number (adjust as needed)
+    mov dh, [btnRow]       ; row number (adjust as needed)
     mov dl, 5        ; column position
     int 10h
      mov ah, 09h
@@ -231,7 +285,7 @@ main:
     ; CANCEL
     mov ah, 2
     mov bh, 0
-    mov dh, 20
+    mov dh, [btnRow]
     mov dl, 20       ; move further right
     int 10h
     mov ah, 09h
@@ -245,7 +299,7 @@ main:
     ; EDIT
     mov ah, 2
     mov bh, 0
-    mov dh, 20
+    mov dh, [btnRow]
     mov dl, 35       ; move even further right
     int 10h
     mov ah, 09h
