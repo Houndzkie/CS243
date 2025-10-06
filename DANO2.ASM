@@ -7,7 +7,7 @@
 .stack 100h
 .data
     ; title and prompts
-    titles        db 'FISHBOOK ACCOUNT REGISTRATION',0ah,'$'
+    titles        db 'FISHBOOK ACCOUNT REGISTRATION','$'
     enterName     db 13,10,'Enter Full Name: $'
     enterBirthday db 13,10,'Enter Birthday: $'
     enterGender   db 13,10,'Enter Gender: $'
@@ -28,7 +28,7 @@
 
     ; ask for Password
     ; display
-    review       db 13,10,10,'Please review account registration details below:',10,'$'
+    review       db 13,10,'Please review account registration details below:',10,'$'
     top          db 13,   218,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,194,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191,10,'$'
     mid          db 13,10,   198,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,197,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,179,10,'$'
     bot          db 13,10,   212,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,193,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,190,10,'$'
@@ -102,10 +102,6 @@ main:
     mov cl, 0Ah
     mov dl, cl
     int 21h
-    mov ah, 02h
-    mov cl, 0Ah
-    mov dl, cl
-    int 21h
     mov ah, 9
     lea dx, prompt
     int 21h
@@ -137,7 +133,7 @@ InvalidChoice:
     lea dx, invalid
     int 21h
 
-    mov byte ptr [btnRow], 15   ; put buttons just below the invalid text
+    mov byte ptr [btnRow], 13   ; put buttons just below the invalid text
     jmp ShowButtons
 
 ShowTable:
@@ -248,7 +244,7 @@ int 10h
     lea dx, bot
     int 21h
 
-    mov byte ptr [btnRow], 24   ; put buttons just below the invalid text
+    mov byte ptr [btnRow], 23   ; put buttons just below the invalid text
     jmp ShowButtons
 
 ShowButtons:
