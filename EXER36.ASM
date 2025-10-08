@@ -1,7 +1,7 @@
 ; Filename: EXER36.ASM
 ; Programmer Name: Helge Justine O. Dano
 ; Date: October 3, 2025
-; Description: Create a calculator program to perform the actual math operations and display the results.
+; Description: Create a calculator program to perform the actual math operations and display the results. 
 
 .model small
 .stack 100h
