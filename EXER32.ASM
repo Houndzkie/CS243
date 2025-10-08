@@ -38,7 +38,7 @@ start:
   call read_number
   mov num2, al
 
-  ; Check for divcision by zero
+  ; Check for division by zero
   cmp num2, 0
   je div_by_zero
 
