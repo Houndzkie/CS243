@@ -14,13 +14,12 @@
   exit db 'e - Exit$'
 
   choice db 'Enter your choice: $'
-  userChoice db ?    ; Add this new variable for storing user input
+  userChoice db ?    
   press db 13,10,10, 'Press Enter to continue.$'
   exitDisplay db 'Exit Program$'
-  okra db '                                                            '
 
   ; Addition
-  displayAddition db 13,'Addition$'
+  displayAddition db 'Addition$'
   promptFirstAddend db 13,'Enter first addend: $'
   promptSecondAddend db 13, 10, 'Enter second addend: $'
   displayFirstAddend db 10, 'First addend is: $'
@@ -31,8 +30,8 @@
   sum db ?
 
   ; Subtraction
-  displaySubtraction db 13,'Subtraction$'
-  promptMinuend db 13,10, 'Enter minuend: $'
+  displaySubtraction db 'Subtraction$'
+  promptMinuend db 13,'Enter minuend: $'
   promptSubtrahend db 13, 10, 'Enter subtrahend: $'
   displayMinuend db 10, 'Minuend is: $'
   displaySubtrahend db 10, 'Subtrahend is: $'
@@ -42,8 +41,8 @@
   difference db ?
 
   ; Multiplication
-  displayMultiplication db 13,'Multiplication$'
-  promptMultiplicand db 13, 10,10, 'Enter multiplicand: $'
+  displayMultiplication db 'Multiplication$'
+  promptMultiplicand db 13,'Enter multiplicand: $'
   promptMultiplier db 13, 10, 'Enter multiplier: $'
   displayMultiplicand db 10, 'Multiplicand is: $'
   displayMultiplier db 10, 'Multiplier is: $'
@@ -53,8 +52,8 @@
   product db ?
 
   ; Division
-  displayDivision db 13,'Division$'
-  promptDividend db 13,10, 10, 'Enter dividend: $'
+  displayDivision db 'Division$'
+  promptDividend db 13,'Enter dividend: $'
   promptDivisor db 13, 10, 'Enter divisor: $'
   displayDividend db 10, 'Dividend is: $'
   displayDivisor db 10, 'Divisor is: $'
@@ -69,10 +68,13 @@ ProgramStart:
   mov ax, @data
   mov ds, ax
 
-  ; Display main menu with color
-  mov bl, 07h ; white color for main menu
+  ; Clear screen with default color first
+  call ClearScreen
+
+  ; Display main menu - reset to default color
+  call reset_color
   lea dx, mainMenu
-  call print_colored
+  call print_normal
 
   mov ah, 02h
   mov cl, 10
@@ -80,7 +82,7 @@ ProgramStart:
   int 21h
 
   ; Display addition option with color
-  mov bl, 40h ; red background
+  mov bl, 40h ; black on red background
   lea dx, addition
   call print_colored
 
@@ -90,7 +92,7 @@ ProgramStart:
   int 21h
 
   ; Display subtraction option with color
-  mov bl, 20h ; green background
+  mov bl, 20h ; black on green background
   lea dx, subtraction
   call print_colored
 
@@ -100,7 +102,7 @@ ProgramStart:
   int 21h
 
   ; Display multiplication option with color
-  mov bl, 30h ; cyan background
+  mov bl, 30h ; black on cyan background
   lea dx, multiplication
   call print_colored
 
@@ -110,7 +112,7 @@ ProgramStart:
   int 21h
 
   ; Display division option with color
-  mov bl, 50h ; magenta background
+  mov bl, 50h ; black on magenta background
   lea dx, division
   call print_colored
 
@@ -120,7 +122,7 @@ ProgramStart:
   int 21h
 
   ; Display exit option with color
-  mov bl, 70h ; white on black
+  mov bl, 70h ; black on white
   lea dx, exit
   call print_colored
 
@@ -128,14 +130,14 @@ ProgramStart:
   mov dl, 10
   int 21h
 
-  ; Display choice prompt (no color)
-  mov ah, 09h
+  ; Display choice prompt with normal color
+  call reset_color
   lea dx, choice
-  int 21h
+  call print_normal
 
   mov ah, 01
   int 21h
-  mov userChoice, al    ; Store in userChoice
+  mov userChoice, al
 
   cmp al, 'a'
   je additionOperation
@@ -155,7 +157,7 @@ ProgramStart:
   mov cl,10
   mov dl,cl
   int 21h
-  jmp ProgramStart ; Invalid choice, restart
+  jmp ProgramStart
 
 subjmp1:
   jmp subjmp2
@@ -178,7 +180,7 @@ additionOperation:
   int 21h
 
   ; Display "Addition" header with color
-  mov bl, 40h ; red background
+  mov bl, 40h ; black on red
   lea dx, displayAddition
   call print_colored
 
@@ -186,31 +188,30 @@ additionOperation:
   mov dl, 10
   int 21h
 
+  ; Reset to normal color for prompts
+  call reset_color
+  
   ; Prompt for first addend
-  mov ah, 09h
   lea dx, promptFirstAddend
-  int 21h
+  call print_normal
   call read_number
   mov firstAddend, al
 
   ; Prompt for second addend
-  mov ah, 09h
   lea dx, promptSecondAddend
-  int 21h
+  call print_normal
   call read_number
   mov secondAddend, al
 
   ; Display first addend
-  mov ah, 09h
   lea dx, displayFirstAddend
-  int 21h
+  call print_normal
   mov al, firstAddend
   call display_number
 
   ; Display second addend
-  mov ah, 09h
   lea dx, displaySecondAddend
-  int 21h
+  call print_normal
   mov al, secondAddend
   call display_number
 
@@ -220,16 +221,14 @@ additionOperation:
   mov sum, al
 
   ; Display sum
-  mov ah, 09h
   lea dx, displaySum
-  int 21h
+  call print_normal
   mov al, sum
   call display_number
 
   ; Wait for user to press Enter
-  mov ah, 09h
   lea dx, press
-  int 21h
+  call print_normal
   jmp WaitForEnter
 
 subjmp2:
@@ -253,7 +252,7 @@ subtractionOperation:
   int 21h
 
   ; Display "Subtraction" header with color
-  mov bl, 20h ; green background
+  mov bl, 20h ; black on green
   lea dx, displaySubtraction
   call print_colored
 
@@ -261,31 +260,30 @@ subtractionOperation:
   mov dl, 10
   int 21h
 
+  ; Reset to normal color for prompts
+  call reset_color
+
   ; Prompt for minuend
-  mov ah, 09h
   lea dx, promptMinuend
-  int 21h
+  call print_normal
   call read_number
   mov minuend, al
 
   ; Prompt for subtrahend
-  mov ah, 09h
   lea dx, promptSubtrahend
-  int 21h
+  call print_normal
   call read_number
   mov subtrahend, al
 
   ; Display minuend
-  mov ah, 09h
   lea dx, displayMinuend
-  int 21h
+  call print_normal
   mov al, minuend
   call display_number
 
   ; Display subtrahend
-  mov ah, 09h
   lea dx, displaySubtrahend
-  int 21h
+  call print_normal
   mov al, subtrahend
   call display_number
 
@@ -295,16 +293,14 @@ subtractionOperation:
   mov difference, al
 
   ; Display difference
-  mov ah, 09h
   lea dx, displayDifference
-  int 21h
+  call print_normal
   mov al, difference
   call display_number
 
   ; Wait for user to press Enter
-  mov ah, 09h
   lea dx, press
-  int 21h
+  call print_normal
   jmp WaitForEnter
 
 muljmp3:
@@ -326,7 +322,7 @@ multiplicationOperation:
   int 21h
 
   ; Display "Multiplication" header with color
-  mov bl, 30h ; cyan background
+  mov bl, 30h ; black on cyan
   lea dx, displayMultiplication
   call print_colored
 
@@ -334,50 +330,47 @@ multiplicationOperation:
   mov dl, 10
   int 21h
 
+  ; Reset to normal color for prompts
+  call reset_color
+
   ; Prompt for multiplicand
-  mov ah, 09h
   lea dx, promptMultiplicand
-  int 21h
+  call print_normal
   call read_number
   mov multiplicand, al
 
   ; Prompt for multiplier
-  mov ah, 09h
   lea dx, promptMultiplier
-  int 21h
+  call print_normal
   call read_number
   mov multiplier, al
 
   ; Display multiplicand
-  mov ah, 09h
   lea dx, displayMultiplicand
-  int 21h
+  call print_normal
   mov al, multiplicand
   call display_number
 
   ; Display multiplier
-  mov ah, 09h
   lea dx, displayMultiplier
-  int 21h
+  call print_normal
   mov al, multiplier
   call display_number
 
   ; Calculate product
   mov al, multiplicand
-  mul multiplier ; AL = AL * multiplier (result in AX)
-  mov product, al ; Store lower byte of result in product
+  mul multiplier
+  mov product, al
 
   ; Display product
-  mov ah, 09h
   lea dx, displayProduct
-  int 21h
+  call print_normal
   mov al, product
   call display_number
 
   ; Wait for user to press Enter
-  mov ah, 09h
   lea dx, press
-  int 21h
+  call print_normal
   jmp WaitForEnter
   
 divjmp4:
@@ -397,7 +390,7 @@ divisionOperation:
   int 21h
 
   ; Display "Division" header with color
-  mov bl, 50h ; magenta background
+  mov bl, 50h ; black on magenta
   lea dx, displayDivision
   call print_colored
 
@@ -405,65 +398,61 @@ divisionOperation:
   mov dl, 10
   int 21h
 
+  ; Reset to normal color for prompts
+  call reset_color
+
   ; Prompt for dividend
-  mov ah, 09h
   lea dx, promptDividend
-  int 21h
+  call print_normal
   call read_number
   mov dividend, al
 
   ; Prompt for divisor
-  mov ah, 09h
   lea dx, promptDivisor
-  int 21h
+  call print_normal
   call read_number
   mov divisor, al
 
   ; Display dividend
-  mov ah, 09h
   lea dx, displayDividend
-  int 21h
+  call print_normal
   mov al, dividend
   call display_number
 
   ; Display divisor
-  mov ah, 09h
   lea dx, displayDivisor
-  int 21h
+  call print_normal
   mov al, divisor
   call display_number
 
-  ; Calculate quotient (integer division)
-  xor ah, ah ; Clear AH for division (AL will hold the quotient)
+  ; Calculate quotient
+  xor ah, ah
   mov al, dividend
-  xor dx, dx ; Clear DX for division (DX:AX will hold the dividend)
-  div divisor ; AL = AL / divisor (result in AL)
-  mov quotient, al ; Store result in quotient
+  xor dx, dx
+  div divisor
+  mov quotient, al
 
   ; Display quotient
-  mov ah, 09h
   lea dx, displayQuotient
-  int 21h
+  call print_normal
   mov al, quotient
   call display_number
 
   ; Wait for user to press Enter
-  mov ah, 09h
   lea dx, press
-  int 21h
+  call print_normal
   jmp WaitForEnter
 
 WaitForEnter:
-  mov ah, 01h     ; DOS keyboard input (waits for keypress)
+  mov ah, 01h
   int 21h
-  cmp al, 0Dh     ; Enter key has ASCII code 13 (0Dh)
-  jne WaitForEnter  ; If not Enter, keep waiting
+  cmp al, 0Dh
+  jne WaitForEnter
 
   mov ah, 02h
   mov cl, 10
   mov dl, cl
   int 21h
-  call ClearScreen
   jmp ProgramStart
 
 exitjmp5:
@@ -481,54 +470,97 @@ exitProgram:
   int 21h
 
   ; Display "Exit Program" with color
-  mov bl, 70h ; white on black
+  mov bl, 70h ; black on white
   lea dx, exitDisplay
   call print_colored
 
-  mov ah, 02h
-  mov dl, 10
-  int 21h
-
-  mov ah, 09h
+  call reset_color
   lea dx, press
-  int 21h
+  call print_normal
 
   mov ax, 4C00h
   int 21h
 
-; Clear screen procedure
+; Clear screen procedure with default color
 ClearScreen proc
     mov ax, 0600h        ; scroll entire screen up
+    mov bh, 07h          ; default color (white on black)
     mov cx, 0000h        ; top-left corner
     mov dx, 184Fh        ; bottom-right corner
     int 10h
+    
+    ; Reset cursor to top-left
+    mov ah, 02h
+    mov bh, 0
+    mov dh, 0
+    mov dl, 0
+    int 10h
+    
     ret
 ClearScreen endp
 
-; New print_colored procedure - prints string character by character with color
+; Reset color to default
+reset_color proc
+    push ax
+    push bx
+    push cx
+    
+    ; Clear any existing color attributes
+    mov ah, 09h
+    mov al, ' '
+    mov bl, 07h  ; default white on black
+    mov bh, 0
+    mov cx, 1
+    int 10h
+    
+    pop cx
+    pop bx
+    pop ax
+    ret
+reset_color endp
+
+; Print string with normal color (no special coloring)
+print_normal proc
+    push ax
+    mov ah, 09h
+    int 21h
+    pop ax
+    ret
+print_normal endp
+
+; Print colored string - only colors the specific string
 print_colored PROC
     push ax
     push bx
     push cx
     push dx
     push si
+    
     mov si, dx          ; SI points to string
-    mov ah, 03h         ; Get cursor position
+    
+    ; Get current cursor position
+    mov ah, 03h
     mov bh, 0
     int 10h
+    
 next_char:
     mov al, [si]        ; Get character
     cmp al, '$'         ; Check for end of string
     je done_color
+    
+    ; Write character with color attribute
     mov ah, 09h         ; Write character with attribute
     mov bh, 0           ; Page 0
     mov cx, 1           ; Write 1 character
     int 10h
+    
+    ; Move to next position
     inc si              ; Next character
     inc dl              ; Move cursor right
     mov ah, 02h         ; Set cursor position
     int 10h
     jmp next_char
+    
 done_color:
     pop si
     pop dx
@@ -538,28 +570,28 @@ done_color:
     ret
 print_colored ENDP
 
-; Read a number from keyboard (assumes single digit input)
+; Read a number from keyboard
 read_number proc
-  mov ah, 01h ; Function to read character
+  mov ah, 01h
   int 21h
-  sub al, '0' ; Convert ASCII to number
+  sub al, '0'
   ret
 read_number endp
 
-; Display a number in AL (handles numbers 0-255)
+; Display a number in AL
 display_number proc
   push ax
   push bx
   push cx
   push dx
   
-  xor cx, cx        ; Clear counter for digits
-  mov bl, 10        ; Divisor = 10
+  xor cx, cx
+  mov bl, 10
   
   ; Handle special case of 0
   cmp al, 0
   jne convert_loop
-  push ax           ; Push 0 onto stack
+  push ax
   inc cx
   jmp display_digits
   
@@ -567,21 +599,21 @@ convert_loop:
   cmp al, 0
   je display_digits
   
-  xor ah, ah        ; Clear AH for division
-  div bl            ; AL = AL / 10, AH = remainder
-  push ax           ; Save remainder (digit) on stack
-  mov al, al        ; Keep quotient in AL
-  inc cx            ; Increment digit counter
+  xor ah, ah
+  div bl
+  push ax
+  mov al, al
+  inc cx
   jmp convert_loop
   
 display_digits:
   cmp cx, 0
   je done_display
   
-  pop ax            ; Get digit from stack
-  mov dl, ah        ; Remainder is in AH
-  add dl, '0'       ; Convert to ASCII
-  mov ah, 02h       ; Display character function
+  pop ax
+  mov dl, ah
+  add dl, '0'
+  mov ah, 02h
   int 21h
   dec cx
   jmp display_digits
