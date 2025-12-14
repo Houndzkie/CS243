@@ -1,520 +1,1383 @@
+; FOOD OVERFLOW
+; An Online Food Ordering System where users can create their own accounts, order food 
+
 .model small
 .stack 100h
 
 .data
-    ; ================= UI STRINGS =================
-    header_main     db 13, 10, '========================================='
-                    db 13, 10, '      FOOD OVERFLOW - ORDERING SYSTEM    '
-                    db 13, 10, '=========================================$'
+    ; ================= UI GRAPHICS =================
+    box_top         db 0C9h, 50 dup(0CDh), 0BBh, '$'
+    box_mid         db 0BAh, 50 dup(' '),  0BAh, '$'
+    box_bot         db 0C8h, 50 dup(0CDh), 0BCh, '$'
     
-    ; Landing Page
-    str_welcome     db 13, 10, '1. LOGIN'
-                    db 13, 10, '2. SIGN-UP'
-                    db 13, 10, '3. EXIT PROGRAM'
-                    db 13, 10, 'Enter choice: $'
-
-    ; Auth Strings
-    str_ask_user    db 13, 10, 'Username: $'
-    str_ask_pass    db 13, 10, 'Password: $'
-    str_create_ok   db 13, 10, '>> Account Created! Please Login.$'
-    str_login_err   db 13, 10, '>> Invalid Credentials! Press any key.$'
-    str_login_ok    db 13, 10, '>> Login Successful!$'
+    ; --- TITLES ---
+    app_title       db '      F O O D   O V E R F L O W      $'
     
-    ; Main Menu
-    str_menu        db 13, 10, 13, 10, '--- MAIN MENU ---'
-                    db 13, 10, '1. Select Order'
-                    db 13, 10, '2. View Order'
-                    db 13, 10, '3. Remove Order (Clear)'
-                    db 13, 10, '4. Buy Order'
-                    db 13, 10, '5. Logout'
-                    db 13, 10, 'Select: $'
-
-    ; Categories
-    str_cats        db 13, 10, 13, 10, '--- CATEGORIES ---'
-                    db 13, 10, '1. Main Dishes'
-                    db 13, 10, '2. Snacks'
-                    db 13, 10, '3. Desserts'
-                    db 13, 10, '4. Drinks'
-                    db 13, 10, '5. Back$'
-
-    ; Items
-    str_mains       db 13, 10, '1. Chicken (150)  2. Steak (100)  3. Fillet (120)$'
-    str_snacks      db 13, 10, '1. Burger (50)    2. Fries (40)   3. Pizza (90)$'
-    str_desrt       db 13, 10, '1. IceCrm (30)    2. Pie (35)     3. Shake (60)$'
-    str_drnks       db 13, 10, '1. Water (15)     2. Soda (25)    3. Juice (30)$'
+    open_big_1      db '  _____  _____  _____  _____    $'
+    open_big_2      db ' |   __| |     | |     | |     \   $'
+    open_big_3      db ' |   __| |  |  | |  |  | |  |  |   $'
+    open_big_4      db ' |__|    |_____| |_____| |_____/   $'
     
-    str_pick_item   db 13, 10, 'Choose Item No: $'
-    str_qty         db 13, 10, 'Quantity (1-9): $'
-    str_added       db ' >> Added to cart!$'
+    open_sub_big    db '   O V E R F L O W   $'
+    open_sub_small  db '   ONLINE FOOD ORDERING SYSTEM   $'
+    open_prompt     db '   [ PRESS ANY KEY TO ORDER ]    $'
+    
+    close_big       db '      T H A N K   Y O U !        $'
+    close_small     db '     Have a wonderful meal!      $'
+    
+    ; --- HUD ---
+    hud_spent       db ' Spent: P$'
+    hud_limit       db '/500$'
+    hud_ord         db 'Orders: $'
+    hud_ord_lim     db '/10$'
 
-    ; Cart / Receipt
-    str_cart_head   db 13, 10, '--- YOUR CART ---$'
-    str_empty       db 13, 10, 'Cart is empty.$'
-    str_total       db 13, 10, 'Total Price: P$'
-    str_cleared     db 13, 10, '>> Cart Cleared.$'
-    str_receipt     db 13, 10, '--- RECEIPT ---', 13, 10, 'Payment Success. Redirecting...$'
-    str_pause       db 13, 10, 'Press any key...$'
+    ; --- MENU TEXT ---
+    txt_land_1      db '             1.  LOGIN                   $'
+    txt_land_2      db '             2.  SIGN-UP                 $'
+    txt_land_3      db '             3.  EXIT                    $'
+    txt_land_p      db '        Enter choice: $'
+
+    txt_user        db ' Username: $'
+    txt_pass        db ' Password: $'
+    
+    head_signup     db '          --- CREATE ACCOUNT ---          $'
+    head_login      db '              --- LOGIN ---               $'
+    head_menu       db '            --- MAIN MENU ---             $'
+    head_cats       db '           --- CATEGORIES ---             $'
+    head_cart       db '            --- YOUR CART ---             $'
+    head_rcpt       db '             --- RECEIPT ---              $'
+
+    menu_1          db '           1. Select Order                $'
+    menu_2          db '           2. View Order                  $'
+    menu_3          db '           3. Clear Order                 $'
+    menu_4          db '           4. Buy Order                   $'
+    menu_5          db '           5. Logout                      $'
+    menu_sel        db '           Select: $'
+
+    cat_1           db '           1. Main Dishes                 $'
+    cat_2           db '           2. Snacks                      $'
+    cat_3           db '           3. Desserts                    $'
+    cat_4           db '           4. Drinks                      $'
+    cat_5           db '           5. Back                        $'
+
+    str_mains       db ' 1.Chicken(150)  2.Steak(100)  3.Fillet(120)$'
+    str_snacks      db ' 1.Burger(50)    2.Fries(40)   3.Pizza(90)  $'
+    str_desrt       db ' 1.IceCrm(30)    2.Pie(35)     3.Shake(60)  $'
+    str_drnks       db ' 1.Water(15)     2.Soda(25)    3.Juice(30)  $'
+    
+    txt_pick        db ' Choose Item No: $'
+    txt_qty         db ' Quantity (1-10): $'
+    
+    ; Messages
+    msg_empty       db ' >> Error: Input cannot be empty!$'
+    msg_full        db ' >> Error: Database Full (Max 5)!$'
+    msg_dup         db ' >> Error: Username taken!$'
+    msg_inv_sel     db ' >> Error: Invalid selection!$'
+    msg_inv_qty     db ' >> Error: Invalid qty (1-10)!$'
+    msg_limit       db ' >> Error: Order limit (10) reached!$'
+    msg_budget      db ' >> Error: Budget limit (P500) exceeded!$'
+    
+    msg_created     db ' >> Account Created! Login now.$'
+    msg_fail        db ' >> Invalid Username/Password.$'
+    msg_ok          db ' >> Login Successful! Cart Restored.$'
+    msg_add         db ' >> Item Added!$'
+    msg_cleared     db ' >> Cart Cleared.$'
+    msg_empty_c     db ' >> Cart is empty.$'
+    msg_pause       db ' Press any key...$'
+    msg_confirm     db ' Are you sure you want to buy? (Y/N): $'
+    msg_saved       db ' >> Cart Saved. Logging out...$'
+
+    ; Receipt Logic
+    n_00 db 'Fried Chicken $'
+    n_01 db 'Burger Steak  $'
+    n_02 db 'Chkn Fillet   $'
+    n_03 db 'Burger        $'
+    n_04 db 'French Fries  $'
+    n_05 db 'Pizza         $'
+    n_06 db 'Ice Cream     $'
+    n_07 db 'Peach Pie     $'
+    n_08 db 'Milkshake     $'
+    n_09 db 'Water         $'
+    n_10 db 'Softdrinks    $'
+    n_11 db 'Juice         $'
+    
+    str_x           db ' x $'
+    str_eq          db ' = P$'
+    str_total       db ' Total Price: P$'
+
+    newline         db 13, 10, '$'
 
     ; ================= VARIABLES =================
-    ; Buffers for input (Max 20 chars)
-    in_user_buf     db 21, ?, 21 dup('$')
-    in_pass_buf     db 21, ?, 21 dup('$')
+    in_user_buf     db 51, ?, 51 dup('$')
+    in_pass_buf     db 51, ?, 51 dup('$')
+    in_qty_buf      db 4, ?, 4 dup('$')
     
-    ; Stored Credentials (Simulated DB)
-    db_user         db 21 dup('$')
-    db_pass         db 21 dup('$')
-    db_user_len     db 0
-    db_pass_len     db 0
+    ; --- USER DATABASE ---
+    MAX_USERS       equ 5
+    SLOT_SIZE       equ 52 
+    db_users        db 260 dup(0) 
+    db_pass         db 260 dup(0)
+    acc_count       db 0
     
-    ; Order Data
+    curr_chk_idx    db 0
+    current_user_id db 0  ; Stores the Index of currently logged in user (0-4)
+    temp_offset     dw 0
+    is_duplicate    db 0
+    
+    ; --- PERSISTENT CART STORAGE ---
+    ; Each user gets a slot. Slot size = 16 bytes.
+    ; 12 bytes (Qty Array) + 2 bytes (Total Bill) + 2 bytes (Item Count)
+    ; Total Storage = 5 users * 16 bytes = 80 bytes
+    db_carts        db 80 dup(0)
+    
+    ; --- ACTIVE SESSION CART (RAM) ---
+    cart_qty        db 12 dup(0)
+    item_prices     dw 150, 100, 120, 50, 40, 90, 30, 35, 60, 15, 25, 30
+    
+    selected_idx    dw 0 
     current_price   dw 0
     total_bill      dw 0
-    item_count      dw 0
-    temp_qty        dw 0
+    item_count      dw 0 
+    
+    calc_qty        dw 0
+    calc_cost       dw 0
     
 .code
 
 ; =============================================================
-; MACRO HELPER
+; MACROS
 ; =============================================================
-Display macro msg
+Prt macro msg
     lea dx, msg
     mov ah, 09h
     int 21h
 endm
 
+GoXY macro col, row
+    mov ah, 02h
+    mov bh, 00h
+    mov dl, col
+    mov dh, row
+    int 10h
+endm
+
+Cls macro
+    mov ax, 0600h   
+    mov bh, 4Eh     ; RED BACKGROUND (4), YELLOW TEXT (E)
+    mov cx, 0000h   
+    mov dx, 184Fh   
+    int 10h
+endm
+
 main proc
     mov ax, @data
     mov ds, ax
-    mov es, ax 
+    mov es, ax
+
+    Cls
 
 ; =============================================================
-; LANDING PAGE ROUTER
+; OPENING SCREEN
+; =============================================================
+opening_screen:
+    Cls
+    GoXY 14, 6
+    Prt box_top
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 8
+    Prt box_mid
+    GoXY 14, 9
+    Prt box_mid
+    GoXY 14, 10
+    Prt box_mid
+    GoXY 14, 11
+    Prt box_mid
+    GoXY 14, 12
+    Prt box_mid
+    GoXY 14, 13
+    Prt box_mid
+    GoXY 14, 14
+    Prt box_mid
+    GoXY 14, 15
+    Prt box_mid
+    GoXY 14, 16
+    Prt box_bot
+    
+    GoXY 22, 7
+    Prt open_big_1
+    GoXY 22, 8
+    Prt open_big_2
+    GoXY 22, 9
+    Prt open_big_3
+    GoXY 22, 10
+    Prt open_big_4
+    GoXY 28, 11
+    Prt open_sub_big
+    GoXY 23, 13
+    Prt open_sub_small
+    GoXY 23, 15
+    Prt open_prompt
+    
+    mov ah, 07h
+    int 21h
+
+; =============================================================
+; LANDING PAGE
 ; =============================================================
 start_screen:
-    mov ax, 03h ; Clear Screen
-    int 10h
+    Cls
+    GoXY 14, 6
+    Prt box_top
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 8
+    Prt box_mid 
+    GoXY 14, 9
+    Prt box_mid 
+    GoXY 14, 10
+    Prt box_mid 
+    GoXY 14, 11
+    Prt box_mid 
+    GoXY 14, 12
+    Prt box_mid 
+    GoXY 14, 13
+    Prt box_bot
     
-    Display header_main
-    Display str_welcome
+    GoXY 20, 7
+    Prt app_title
+    GoXY 14, 9
+    Prt txt_land_1
+    GoXY 14, 10
+    Prt txt_land_2
+    GoXY 14, 11
+    Prt txt_land_3
+    GoXY 14, 12
+    Prt txt_land_p
     
-    mov ah, 01h ; Read char
+    mov ah, 01h 
     int 21h
     
-    ; --- SAFE JUMP PATTERN ---
+    cmp al, 13 
+    je start_invalid
     cmp al, '1'
-    jne try_signup
-    jmp login_page      ; Unconditional Jumps have unlimited range
-    
-try_signup:
-    cmp al, '2'
-    jne try_exit
-    jmp signup_page
-
-try_exit:
+    jl start_invalid
     cmp al, '3'
-    jne reload_start
-    jmp exit_dos
+    jg start_invalid
     
-reload_start:
+    cmp al, '1'
+    je go_login_jump
+    cmp al, '2'
+    je go_signup_jump
+    cmp al, '3'
+    je go_exit_jump
+    
+start_invalid:
+    GoXY 14, 15
+    Prt msg_inv_sel
+    mov ah, 07h
+    int 21h
     jmp start_screen
 
+go_login_jump:
+    jmp login_page
+go_signup_jump:
+    jmp signup_page
+go_exit_jump:
+    jmp exit_dos
+
 ; =============================================================
-; SIGN UP LOGIC
+; SIGN UP
 ; =============================================================
 signup_page:
-    mov ax, 03h
-    int 10h
-    Display header_main
+    Cls
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt head_signup
+    GoXY 14, 8
+    Prt box_bot
     
-    Display str_ask_user
+    mov al, acc_count
+    cmp al, MAX_USERS
+    jl proceed_signup
+    GoXY 14, 10
+    Prt msg_full
+    mov ah, 07h
+    int 21h
+    jmp start_screen
+
+proceed_signup:
+get_user_create:
+    GoXY 14, 10
+    Prt txt_user
     lea dx, in_user_buf
     mov ah, 0Ah
     int 21h
-    
-    Display str_ask_pass
+    lea bx, in_user_buf
+    call strip_whitespace_proc
+    cmp in_user_buf+1, 0
+    jne check_dupe
+    GoXY 14, 12
+    Prt msg_empty
+    mov ah, 07h
+    int 21h
+    jmp signup_page
+check_dupe:
+    call check_duplicate_proc
+    cmp is_duplicate, 1
+    jne get_pass_create
+    GoXY 14, 12
+    Prt msg_dup
+    mov ah, 07h
+    int 21h
+    jmp signup_page
+get_pass_create:
+    GoXY 14, 12
+    Prt txt_pass
     lea dx, in_pass_buf
     mov ah, 0Ah
     int 21h
-    
-    ; Save credentials
+    lea bx, in_pass_buf
+    call strip_whitespace_proc
+    cmp in_pass_buf+1, 0
+    jne save_acc
+    GoXY 14, 14
+    Prt msg_empty
+    mov ah, 07h
+    int 21h
+    jmp signup_page
+save_acc:
+    xor ax, ax
+    mov al, acc_count
+    mov bl, SLOT_SIZE
+    mul bl
+    mov di, ax
+    lea bx, db_users
+    add bx, di
     mov al, in_user_buf+1
-    mov db_user_len, al
+    mov [bx], al
+    inc bx
     lea si, in_user_buf+2 
-    lea di, db_user         
-    mov cl, db_user_len
+    mov cl, in_user_buf+1
     xor ch, ch
+    push di
+    mov di, bx
     cld
-    rep movsb               
-    
-    mov al, in_pass_buf+1
-    mov db_pass_len, al
-    lea si, in_pass_buf+2
-    lea di, db_pass
-    mov cl, db_pass_len
-    xor ch, ch
     rep movsb
-    
-    Display str_create_ok
-    mov ah, 01h ; Pause
+    pop di
+    lea bx, db_pass
+    add bx, di
+    mov al, in_pass_buf+1
+    mov [bx], al
+    inc bx
+    lea si, in_pass_buf+2
+    mov cl, in_pass_buf+1
+    xor ch, ch
+    mov di, bx
+    cld
+    rep movsb
+    inc acc_count
+    GoXY 14, 15
+    Prt msg_created
+    mov ah, 07h
     int 21h
     jmp start_screen
 
 ; =============================================================
-; LOGIN LOGIC
+; LOGIN
 ; =============================================================
 login_page:
-    mov ax, 03h
-    int 10h
-    Display header_main
+    Cls
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt head_login
+    GoXY 14, 8
+    Prt box_bot
     
-    Display str_ask_user
+    GoXY 14, 10
+    Prt txt_user
     lea dx, in_user_buf
     mov ah, 0Ah
     int 21h
+    lea bx, in_user_buf
+    call strip_whitespace_proc
     
-    Display str_ask_pass
+    GoXY 14, 12
+    Prt txt_pass
     lea dx, in_pass_buf
     mov ah, 0Ah
     int 21h
+    lea bx, in_pass_buf
+    call strip_whitespace_proc
     
-    ; --- VALIDATION (With Safe Jumps) ---
-    ; 1. Check User Length
-    mov al, in_user_buf+1
-    cmp al, db_user_len
-    jne goto_login_fail ; Safe jump
-    
-    ; 2. Check User String
+    mov curr_chk_idx, 0
+search_loop:
+    mov al, curr_chk_idx
+    cmp al, acc_count
+    je login_fail_j
+    xor ax, ax
+    mov al, curr_chk_idx
+    mov bl, SLOT_SIZE
+    mul bl
+    mov temp_offset, ax
+    lea bx, db_users
+    add bx, temp_offset 
+    mov al, [bx]
+    cmp al, in_user_buf+1
+    jne next_iter
+    inc bx
     lea si, in_user_buf+2
-    lea di, db_user
-    mov cl, db_user_len
+    mov di, bx
+    mov cl, in_user_buf+1
     xor ch, ch
     cld
     repe cmpsb
-    jne goto_login_fail
-    
-    ; 3. Check Pass Length
-    mov al, in_pass_buf+1
-    cmp al, db_pass_len
-    jne goto_login_fail
-    
-    ; 4. Check Pass String
+    jne next_iter
+    lea bx, db_pass
+    add bx, temp_offset
+    mov al, [bx]
+    cmp al, in_pass_buf+1
+    jne login_fail_j
+    inc bx
     lea si, in_pass_buf+2
-    lea di, db_pass
-    mov cl, db_pass_len
+    mov di, bx
+    mov cl, in_pass_buf+1
     xor ch, ch
+    cld
     repe cmpsb
-    jne goto_login_fail
+    jne login_fail_j
     
-    ; Success
-    Display str_login_ok
-    call reset_cart_proc
+    ; --- LOGIN SUCCESS ---
+    ; 1. Set current user ID
+    mov al, curr_chk_idx
+    mov current_user_id, al
+    
+    ; 2. Load Cart from Storage
+    call load_cart_proc
+    
+    GoXY 14, 15
+    Prt msg_ok
+    mov ah, 07h
+    int 21h
     jmp main_menu_page
-
-goto_login_fail:
-    jmp login_fail_handle
+    
+next_iter:
+    inc curr_chk_idx
+    jmp search_loop
+login_fail_j:
+    GoXY 14, 15
+    Prt msg_fail
+    mov ah, 07h
+    int 21h
+    jmp start_screen
 
 ; =============================================================
-; MAIN MENU LOGIC
+; MAIN MENU
 ; =============================================================
 main_menu_page:
-    mov ax, 03h
-    int 10h
-    Display header_main
-    Display str_menu
+    Cls
+    call draw_hud_proc
     
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt head_menu
+    GoXY 14, 8
+    Prt box_mid
+    GoXY 14, 9
+    Prt menu_1
+    GoXY 14, 10
+    Prt menu_2
+    GoXY 14, 11
+    Prt menu_3
+    GoXY 14, 12
+    Prt menu_4
+    GoXY 14, 13
+    Prt menu_5
+    GoXY 14, 14
+    Prt box_mid
+    GoXY 14, 15
+    Prt menu_sel
+    GoXY 14, 16
+    Prt box_bot
+    
+    GoXY 32, 15
     mov ah, 01h
     int 21h
     
-    ; --- SAFE MENU DISPATCHER ---
     cmp al, '1'
-    jne m_try2
-    jmp select_order_page
-    
-m_try2:
+    je t_order
     cmp al, '2'
-    jne m_try3
-    jmp view_order_page
-
-m_try3:
+    je t_view
     cmp al, '3'
-    jne m_try4
-    jmp remove_order_page
-
-m_try4:
+    je t_clear
     cmp al, '4'
-    jne m_try5
-    jmp buy_order_page
-
-m_try5:
+    je t_buy
     cmp al, '5'
-    jne m_invalid
-    jmp start_screen ; Logout
-
-m_invalid:
+    je t_logout
+    
+    GoXY 14, 18
+    Prt msg_inv_sel
+    mov ah, 07h
+    int 21h
     jmp main_menu_page
 
+t_order:  jmp select_order_page
+t_view:   jmp view_order_page
+t_clear:  jmp clear_order_page
+t_buy:    jmp buy_order_page
+t_logout: jmp logout_logic
+
 ; =============================================================
-; SELECT ORDER (Process)
+; LOGOUT LOGIC (SAVE CART)
+; =============================================================
+logout_logic:
+    call save_cart_proc ; Save current RAM cart to DB
+    call clear_active_cart ; Wipe RAM for safety
+    
+    GoXY 14, 18
+    Prt msg_saved
+    mov ah, 07h
+    int 21h
+    jmp start_screen
+
+; =============================================================
+; SELECT CATEGORY
 ; =============================================================
 select_order_page:
-    mov ax, 03h
-    int 10h
-    Display header_main
-    Display str_cats
-    Display str_pick_item
+    Cls
+    call draw_hud_proc
     
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt head_cats
+    GoXY 14, 8
+    Prt box_mid
+    GoXY 14, 9
+    Prt cat_1
+    GoXY 14, 10
+    Prt cat_2
+    GoXY 14, 11
+    Prt cat_3
+    GoXY 14, 12
+    Prt cat_4
+    GoXY 14, 13
+    Prt cat_5
+    GoXY 14, 14
+    Prt box_mid
+    GoXY 14, 15
+    Prt menu_sel
+    GoXY 14, 16
+    Prt box_bot
+    
+    GoXY 32, 15
     mov ah, 01h
     int 21h
     
-    ; --- SAFE CATEGORY DISPATCHER ---
     cmp al, '1'
-    jne c_try2
-    jmp proc_main_dish
-c_try2:
+    je c_2
     cmp al, '2'
-    jne c_try3
-    jmp proc_snacks
-c_try3:
+    je c_3
     cmp al, '3'
-    jne c_try4
-    jmp proc_desserts
-c_try4:
+    je c_4
     cmp al, '4'
-    jne c_back
-    jmp proc_drinks
-c_back:
-    jmp main_menu_page
+    je c_5
+    cmp al, '5'
+    je c_back
+    
+    GoXY 14, 18
+    Prt msg_inv_sel
+    mov ah, 07h
+    int 21h
+    jmp select_order_page
 
-; --- ITEM LOGIC (Using Trampoline to Calc) ---
+c_2: jmp proc_main_dish
+c_3: jmp proc_snacks
+c_4: jmp proc_desserts
+c_5: jmp proc_drinks
+c_back: jmp main_menu_page
 
+; =============================================================
+; ITEMS
+; =============================================================
 proc_main_dish:
-    Display str_mains
-    Display str_pick_item
+    Cls
+    call draw_hud_proc
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt str_mains
+    GoXY 14, 8
+    Prt box_bot
+    GoXY 14, 10
+    Prt txt_pick
     mov ah, 01h
     int 21h
     
-    ; Safe Checks
     cmp al, '1'
-    jne md_2
-    mov bx, 150
-    jmp go_calc
-md_2:
+    je md1
     cmp al, '2'
-    jne md_3
-    mov bx, 100
-    jmp go_calc
-md_3:
+    je md2
     cmp al, '3'
-    jne md_retry
-    mov bx, 120
-    jmp go_calc
-md_retry:
-    jmp select_order_page
+    je md3
+    jmp item_err
+md1: mov di, 0
+     mov bx, 150
+     jmp go_calc
+md2: mov di, 1
+     mov bx, 100
+     jmp go_calc
+md3: mov di, 2
+     mov bx, 120
+     jmp go_calc
 
 proc_snacks:
-    Display str_snacks
-    Display str_pick_item
+    Cls
+    call draw_hud_proc
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt str_snacks
+    GoXY 14, 8
+    Prt box_bot
+    GoXY 14, 10
+    Prt txt_pick
     mov ah, 01h
     int 21h
-    
     cmp al, '1'
-    jne sn_2
-    mov bx, 50
-    jmp go_calc
-sn_2:
+    je sn1
     cmp al, '2'
-    jne sn_3
-    mov bx, 40
-    jmp go_calc
-sn_3:
+    je sn2
     cmp al, '3'
-    jne sn_retry
-    mov bx, 90
-    jmp go_calc
-sn_retry:
-    jmp select_order_page
+    je sn3
+    jmp item_err
+sn1: mov di, 3
+     mov bx, 50
+     jmp go_calc
+sn2: mov di, 4
+     mov bx, 40
+     jmp go_calc
+sn3: mov di, 5
+     mov bx, 90
+     jmp go_calc
 
 proc_desserts:
-    Display str_desrt
-    Display str_pick_item
+    Cls
+    call draw_hud_proc
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt str_desrt
+    GoXY 14, 8
+    Prt box_bot
+    GoXY 14, 10
+    Prt txt_pick
     mov ah, 01h
     int 21h
-    
     cmp al, '1'
-    jne ds_2
-    mov bx, 30
-    jmp go_calc
-ds_2:
+    je ds1
     cmp al, '2'
-    jne ds_3
-    mov bx, 35
-    jmp go_calc
-ds_3:
+    je ds2
     cmp al, '3'
-    jne ds_retry
-    mov bx, 60
-    jmp go_calc
-ds_retry:
-    jmp select_order_page
+    je ds3
+    jmp item_err
+ds1: mov di, 6
+     mov bx, 30
+     jmp go_calc
+ds2: mov di, 7
+     mov bx, 35
+     jmp go_calc
+ds3: mov di, 8
+     mov bx, 60
+     jmp go_calc
 
 proc_drinks:
-    Display str_drnks
-    Display str_pick_item
+    Cls
+    call draw_hud_proc
+    GoXY 14, 5
+    Prt box_top
+    GoXY 14, 6
+    Prt box_mid
+    GoXY 20, 6
+    Prt app_title
+    GoXY 14, 7
+    Prt box_mid
+    GoXY 14, 7
+    Prt str_drnks
+    GoXY 14, 8
+    Prt box_bot
+    GoXY 14, 10
+    Prt txt_pick
     mov ah, 01h
     int 21h
-    
     cmp al, '1'
-    jne dr_2
-    mov bx, 15
-    jmp go_calc
-dr_2:
+    je dr1
     cmp al, '2'
-    jne dr_3
-    mov bx, 25
-    jmp go_calc
-dr_3:
+    je dr2
     cmp al, '3'
-    jne dr_retry
-    mov bx, 30
-    jmp go_calc
-dr_retry:
+    je dr3
+    jmp item_err
+dr1: mov di, 9
+     mov bx, 15
+     jmp go_calc
+dr2: mov di, 10
+     mov bx, 25
+     jmp go_calc
+dr3: mov di, 11
+     mov bx, 30
+     jmp go_calc
+
+item_err:
+    GoXY 14, 12
+    Prt msg_inv_sel
+    mov ah, 07h
+    int 21h
     jmp select_order_page
 
-; --- CENTRAL CALCULATION TRAMPOLINE ---
+; --- CALCULATION (Dispatcher) ---
 go_calc:
-    jmp ask_quantity_logic
+    mov selected_idx, di
+    mov current_price, bx
+    
+    GoXY 14, 12
+    Prt txt_qty
+    
+    lea dx, in_qty_buf
+    mov ah, 0Ah
+    int 21h
+    
+    mov cl, in_qty_buf+1 
+    
+    cmp cl, 0
+    je dispatch_error
+    cmp cl, 1
+    je dispatch_single
+    cmp cl, 2
+    je dispatch_double
+    jmp dispatch_error 
+
+dispatch_error:
+    jmp qty_error
+dispatch_single:
+    jmp parse_single_digit
+dispatch_double:
+    jmp parse_two_digits
+
+parse_single_digit:
+    mov al, in_qty_buf+2
+    cmp al, '1'
+    jl range_error_1
+    cmp al, '9'
+    jg range_error_1
+    sub al, '0'
+    xor ah, ah
+    jmp finalize_qty
+range_error_1:
+    jmp qty_error
+
+parse_two_digits:
+    mov al, in_qty_buf+2
+    cmp al, '1'
+    jne range_error_2
+    mov al, in_qty_buf+3
+    cmp al, '0'
+    jne range_error_2
+    mov ax, 10
+    jmp finalize_qty
+range_error_2:
+    jmp qty_error
+
+finalize_qty:
+    mov cx, ax
+    mov calc_qty, ax 
+    
+    mov ax, item_count
+    add ax, cx
+    cmp ax, 10
+    jle check_budget_limit 
+    jmp limit_error
+
+check_budget_limit:
+    mov ax, current_price
+    mul calc_qty
+    mov calc_cost, ax
+    
+    mov ax, total_bill
+    add ax, calc_cost
+    cmp ax, 500
+    jle process_order      
+    jmp budget_error
+
+process_order:
+    mov ax, item_count
+    add ax, calc_qty
+    mov item_count, ax
+    
+    mov di, selected_idx
+    mov ax, calc_qty
+    add cart_qty[di], al
+    
+    mov ax, total_bill
+    add ax, calc_cost
+    mov total_bill, ax
+    
+    GoXY 14, 14
+    Prt msg_add
+    mov ah, 07h
+    int 21h
+    jmp select_order_page
+
+qty_error:
+    GoXY 14, 14
+    Prt msg_inv_qty
+    mov ah, 07h
+    int 21h
+    jmp select_order_page
+
+limit_error:
+    GoXY 14, 14
+    Prt msg_limit
+    mov ah, 07h
+    int 21h
+    jmp select_order_page
+
+budget_error:
+    GoXY 14, 14
+    Prt msg_budget
+    mov ah, 07h
+    int 21h
+    jmp select_order_page
 
 ; =============================================================
 ; VIEW ORDER
 ; =============================================================
 view_order_page:
-    mov ax, 03h
-    int 10h
-    Display header_main
-    Display str_cart_head
+    Cls
+    call draw_hud_proc
+    GoXY 20, 2
+    Prt app_title
+    GoXY 14, 3
+    Prt head_cart
     
     cmp total_bill, 0
-    jne show_bill_details
-    
-    Display str_empty
-    jmp view_wait
+    jne show_list
+    GoXY 14, 5
+    Prt msg_empty_c
+    jmp view_pause
 
-show_bill_details:
-    Display str_total
-    mov ax, total_bill
+show_list:
+    mov di, 0 
+    mov si, 5 ; Row Counter
+view_loop:
+    cmp di, 12
+    je view_total_line
+    mov al, cart_qty[di]
+    cmp al, 0
+    je next_view_item
+    
+    mov ax, si
+    GoXY 14, al
+    
+    call print_name_proc
+    Prt str_x
+    xor ax, ax
+    mov al, cart_qty[di]
+    call print_num_proc
+    Prt str_eq
+    
+    mov bx, di
+    shl bx, 1       
+    mov ax, item_prices[bx]
+    xor cx, cx
+    mov cl, cart_qty[di]
+    mul cx          
     call print_num_proc
     
-view_wait:
-    Display str_pause
-    mov ah, 01h
+    inc si 
+next_view_item:
+    inc di
+    jmp view_loop
+
+view_total_line:
+    add si, 1
+    mov ax, si
+    GoXY 14, al
+    
+    Prt str_total
+    mov ax, total_bill
+    call print_num_proc
+
+view_pause:
+    add si, 2
+    mov ax, si
+    GoXY 14, al
+    
+    Prt msg_pause
+    mov ah, 07h
     int 21h
     jmp main_menu_page
 
 ; =============================================================
-; REMOVE ORDER
+; CLEAR ORDER
 ; =============================================================
-remove_order_page:
-    call reset_cart_proc
-    Display str_cleared
-    mov ah, 01h
+clear_order_page:
+    call clear_active_cart
+    Cls
+    GoXY 14, 10
+    Prt msg_cleared
+    mov ah, 07h
     int 21h
     jmp main_menu_page
 
 ; =============================================================
-; BUY ORDER
+; BUY ORDER (WITH CONFIRMATION & DB WIPE)
 ; =============================================================
 buy_order_page:
-    mov ax, 03h
-    int 10h
-    
+    Cls
     cmp total_bill, 0
-    jne process_payment ; Safe Jump logic
-    
-    ; If empty
-    Display str_empty
-    mov ah, 01h
+    jne ask_confirm
+    GoXY 14, 10
+    Prt msg_empty_c
+    mov ah, 07h
     int 21h
     jmp main_menu_page
 
-process_payment:
-    Display str_receipt
-    Display str_total
+ask_confirm:
+    GoXY 20, 5
+    Prt app_title
+    GoXY 14, 8
+    Prt str_total
     mov ax, total_bill
     call print_num_proc
     
-    Display str_pause
+    GoXY 14, 10
+    Prt msg_confirm
+    
     mov ah, 01h
     int 21h
     
-    call reset_cart_proc
-    jmp start_screen 
+    cmp al, 'y'
+    je do_buy
+    cmp al, 'Y'
+    je do_buy
+    cmp al, 'n'
+    je cancel_buy
+    cmp al, 'N'
+    je cancel_buy
+    jmp ask_confirm
 
-; =============================================================
-; SHARED LOGIC (Moved here to be accessible)
-; =============================================================
+cancel_buy:
+    jmp main_menu_page
 
-ask_quantity_logic:
-    mov current_price, bx 
-    Display str_qty
-    mov ah, 01h
+do_buy:
+    Cls
+    GoXY 20, 5
+    Prt app_title
+    GoXY 14, 6
+    Prt head_rcpt
+    GoXY 14, 8
+    Prt str_total
+    mov ax, total_bill
+    call print_num_proc
+    GoXY 14, 10
+    Prt msg_pause
+    mov ah, 07h
     int 21h
-    sub al, '0'      
-    xor ah, ah
-    mov cx, ax       
     
-    mov ax, bx
-    mul cx           
-    add total_bill, ax
+    ; WIPE DB SLOT + ACTIVE RAM
+    call wipe_db_slot_proc
+    call clear_active_cart
     
-    Display str_added
-    mov ah, 01h      
-    int 21h
-    jmp select_order_page
-
-login_fail_handle:
-    Display str_login_err
-    mov ah, 01h
-    int 21h
     jmp start_screen
 
+; =============================================================
+; EXIT & CLOSING SCREEN
+; =============================================================
 exit_dos:
+    Cls
+    GoXY 14, 8
+    Prt box_top
+    GoXY 14, 9
+    Prt box_mid
+    GoXY 14, 10
+    Prt box_mid
+    GoXY 14, 11
+    Prt box_mid
+    GoXY 14, 12
+    Prt box_bot
+    
+    GoXY 22, 10
+    Prt close_big
+    GoXY 22, 11
+    Prt close_small
+    
+    mov ah, 07h
+    int 21h
+    
     mov ah, 4Ch
     int 21h
 
 ; =============================================================
 ; PROCEDURES
 ; =============================================================
-reset_cart_proc proc
+
+draw_hud_proc proc
+    push ax
+    push dx
+    
+    GoXY 2, 2
+    Prt hud_spent
+    mov ax, total_bill
+    call print_num_proc
+    Prt hud_limit
+    
+    GoXY 60, 2
+    Prt hud_ord
+    mov ax, item_count
+    call print_num_proc
+    Prt hud_ord_lim
+    
+    pop dx
+    pop ax
+    ret
+draw_hud_proc endp
+
+; --- DB PROCS ---
+
+; Clear Active RAM variables
+clear_active_cart proc
     mov total_bill, 0
     mov item_count, 0
+    mov cx, 12
+    mov di, 0
+clr_loop:
+    mov cart_qty[di], 0
+    inc di
+    loop clr_loop
     ret
-reset_cart_proc endp
+clear_active_cart endp
+
+; Wipe specific DB slot (Used on Buy)
+wipe_db_slot_proc proc
+    push ax
+    push bx
+    push cx
+    push di
+    
+    xor ax, ax
+    mov al, current_user_id
+    mov bl, 16 ; 16 byte slot
+    mul bl
+    mov di, ax
+    
+    ; Loop 16 times to clear slot
+    mov cx, 16
+    lea bx, db_carts
+    add bx, di
+wipe_loop:
+    mov byte ptr [bx], 0
+    inc bx
+    loop wipe_loop
+    
+    pop di
+    pop cx
+    pop bx
+    pop ax
+    ret
+wipe_db_slot_proc endp
+
+; Load Cart from DB -> RAM
+load_cart_proc proc
+    push ax
+    push bx
+    push cx
+    push si
+    push di
+    
+    ; Calculate Offset
+    xor ax, ax
+    mov al, current_user_id
+    mov bl, 16
+    mul bl
+    mov di, ax ; Offset
+    
+    ; 1. Copy Qty (12 bytes)
+    lea si, db_carts
+    add si, di
+    lea di, cart_qty
+    mov cx, 12
+    cld
+    rep movsb
+    
+    ; 2. Copy total_bill (Word)
+    ; SI is now at db_carts + offset + 12
+    ; Need to reload SI carefully? 
+    ; Actually rep movsb advanced SI by 12.
+    ; SI points to byte 12 (Total Bill low byte)
+    lea si, db_carts
+    xor ax, ax
+    mov al, current_user_id
+    mov bl, 16
+    mul bl
+    add si, ax
+    add si, 12 ; Skip 12 qty bytes
+    
+    mov ax, [si]
+    mov total_bill, ax
+    
+    ; 3. Copy item_count (Word)
+    add si, 2
+    mov ax, [si]
+    mov item_count, ax
+    
+    pop di
+    pop si
+    pop cx
+    pop bx
+    pop ax
+    ret
+load_cart_proc endp
+
+; Save Cart RAM -> DB
+save_cart_proc proc
+    push ax
+    push bx
+    push cx
+    push si
+    push di
+    
+    xor ax, ax
+    mov al, current_user_id
+    mov bl, 16
+    mul bl
+    mov di, ax ; Dest Offset
+    
+    ; 1. Copy Qty
+    lea si, cart_qty
+    lea di, db_carts
+    add di, ax ; Add offset
+    mov cx, 12
+    cld
+    rep movsb
+    
+    ; 2. Copy Bill
+    lea di, db_carts
+    xor ax, ax
+    mov al, current_user_id
+    mov bl, 16
+    mul bl
+    add di, ax
+    add di, 12
+    
+    mov ax, total_bill
+    mov [di], ax
+    
+    ; 3. Copy Count
+    add di, 2
+    mov ax, item_count
+    mov [di], ax
+    
+    pop di
+    pop si
+    pop cx
+    pop bx
+    pop ax
+    ret
+save_cart_proc endp
+
+print_name_proc proc
+    cmp di, 0
+    je p0
+    cmp di, 1
+    je p1
+    cmp di, 2
+    je p2
+    cmp di, 3
+    je p3
+    cmp di, 4
+    je p4
+    cmp di, 5
+    je p5
+    cmp di, 6
+    je p6
+    cmp di, 7
+    je p7
+    cmp di, 8
+    je p8
+    cmp di, 9
+    je p9
+    cmp di, 10
+    je p10
+    cmp di, 11
+    je p11
+    ret
+p0: Prt n_00
+    ret
+p1: Prt n_01
+    ret
+p2: Prt n_02
+    ret
+p3: Prt n_03
+    ret
+p4: Prt n_04
+    ret
+p5: Prt n_05
+    ret
+p6: Prt n_06
+    ret
+p7: Prt n_07
+    ret
+p8: Prt n_08
+    ret
+p9: Prt n_09
+    ret
+p10: Prt n_10
+    ret
+p11: Prt n_11
+    ret
+print_name_proc endp
+
+strip_whitespace_proc proc
+    push ax
+    push cx
+    push si
+    xor cx, cx
+    mov cl, [bx+1] 
+    cmp cl, 0
+    je strip_done
+    mov si, bx
+    add si, 2
+    add si, cx
+    dec si
+strip_loop:
+    cmp cx, 0
+    je strip_update
+    mov al, [si]
+    cmp al, ' '
+    jne strip_update
+    dec si
+    dec cx
+    jmp strip_loop
+strip_update:
+    mov [bx+1], cl
+strip_done:
+    pop si
+    pop cx
+    pop ax
+    ret
+strip_whitespace_proc endp
+
+check_duplicate_proc proc
+    push ax
+    push bx
+    push cx
+    push dx
+    push si
+    push di
+    mov is_duplicate, 0
+    mov curr_chk_idx, 0
+check_loop_d:
+    mov al, curr_chk_idx
+    cmp al, acc_count
+    je check_done_d
+    xor ax, ax
+    mov al, curr_chk_idx
+    mov bl, SLOT_SIZE
+    mul bl
+    mov temp_offset, ax
+    lea bx, db_users
+    add bx, temp_offset
+    mov al, [bx]
+    cmp al, in_user_buf+1
+    jne check_next_d
+    inc bx
+    lea si, in_user_buf+2
+    mov di, bx
+    mov cl, in_user_buf+1
+    xor ch, ch
+    cld
+    repe cmpsb
+    jne check_next_d
+    mov is_duplicate, 1
+    jmp check_done_d
+check_next_d:
+    inc curr_chk_idx
+    jmp check_loop_d
+check_done_d:
+    pop di
+    pop si
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
+check_duplicate_proc endp
 
 print_num_proc proc
     push ax
     push bx
     push cx
     push dx
-    
     xor cx, cx
     mov bx, 10
-    
-loop_div:
+p_div:
     xor dx, dx
-    div bx      
-    push dx     
-    inc cx      
+    div bx
+    push dx
+    inc cx
     cmp ax, 0
-    jne loop_div
-    
-loop_print:
-    pop dx      
-    add dl, '0' 
+    jne p_div
+p_prt:
+    pop dx
+    add dl, '0'
     mov ah, 02h
     int 21h
-    loop loop_print
-    
+    loop p_prt
     pop dx
     pop cx
     pop bx
