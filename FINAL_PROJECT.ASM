@@ -1,14 +1,17 @@
 ; FOOD OVERFLOW
-; An Online Food Ordering System where users can create their own accounts, order food 
+; An Online Food Ordering System where users can create and login to their own accounts, order food, and remove orders. Data will be stored in a simple database in the program memory.
+; Programmer: Helge Justine O. Dano
+; November 30, 2025 - December 15, 2025
 
 .model small
 .stack 100h
 
 .data
     ; ================= UI GRAPHICS =================
-    box_top         db 0C9h, 50 dup(0CDh), 0BBh, '$'
-    box_mid         db 0BAh, 50 dup(' '),  0BAh, '$'
-    box_bot         db 0C8h, 50 dup(0CDh), 0BCh, '$'
+    ; Increased width from 50 to 60 for better fit
+    box_top         db 0C9h, 60 dup(0CDh), 0BBh, '$'
+    box_mid         db 0BAh, 60 dup(' '),  0BAh, '$'
+    box_bot         db 0C8h, 60 dup(0CDh), 0BCh, '$'
     
     ; --- TITLES ---
     app_title       db '      F O O D   O V E R F L O W      $'
@@ -30,6 +33,10 @@
     hud_limit       db '/500$'
     hud_ord         db 'Orders: $'
     hud_ord_lim     db '/10$'
+    
+    ; --- ACCOUNT COUNTER ---
+    txt_acc_lbl     db 'Accounts: $'
+    txt_acc_max     db '/5$'
 
     ; --- MENU TEXT ---
     txt_land_1      db '             1.  LOGIN                   $'
@@ -54,16 +61,18 @@
     menu_5          db '           5. Logout                      $'
     menu_sel        db '           Select: $'
 
+    ; Padded category text for cleaner alignment
     cat_1           db '           1. Main Dishes                 $'
     cat_2           db '           2. Snacks                      $'
     cat_3           db '           3. Desserts                    $'
     cat_4           db '           4. Drinks                      $'
     cat_5           db '           5. Back                        $'
 
-    str_mains       db ' 1.Chicken(150)  2.Steak(100)  3.Fillet(120)$'
-    str_snacks      db ' 1.Burger(50)    2.Fries(40)   3.Pizza(90)  $'
-    str_desrt       db ' 1.IceCrm(30)    2.Pie(35)     3.Shake(60)  $'
-    str_drnks       db ' 1.Water(15)     2.Soda(25)    3.Juice(30)  $'
+    ; Expanded Item strings to fit new box width
+    str_mains       db ' 1.Chicken(150)   2.Steak(100)    3.Fillet(120)$'
+    str_snacks      db ' 1.Burger(50)     2.Fries(40)     3.Pizza(90)  $'
+    str_desrt       db ' 1.IceCrm(30)     2.Pie(35)       3.Shake(60)  $'
+    str_drnks       db ' 1.Water(15)      2.Soda(25)      3.Juice(30)  $'
     
     txt_pick        db ' Choose Item No: $'
     txt_qty         db ' Quantity (1-10): $'
@@ -120,14 +129,11 @@
     acc_count       db 0
     
     curr_chk_idx    db 0
-    current_user_id db 0  ; Stores the Index of currently logged in user (0-4)
+    current_user_id db 0  
     temp_offset     dw 0
     is_duplicate    db 0
     
     ; --- PERSISTENT CART STORAGE ---
-    ; Each user gets a slot. Slot size = 16 bytes.
-    ; 12 bytes (Qty Array) + 2 bytes (Total Bill) + 2 bytes (Item Count)
-    ; Total Storage = 5 users * 16 bytes = 80 bytes
     db_carts        db 80 dup(0)
     
     ; --- ACTIVE SESSION CART (RAM) ---
@@ -181,29 +187,31 @@ main proc
 ; =============================================================
 opening_screen:
     Cls
-    GoXY 14, 6
+    ; Start Box at Col 10 to center 60 chars (80-60)/2 = 10
+    GoXY 10, 6
     Prt box_top
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_mid
-    GoXY 14, 9
+    GoXY 10, 9
     Prt box_mid
-    GoXY 14, 10
+    GoXY 10, 10
     Prt box_mid
-    GoXY 14, 11
+    GoXY 10, 11
     Prt box_mid
-    GoXY 14, 12
+    GoXY 10, 12
     Prt box_mid
-    GoXY 14, 13
+    GoXY 10, 13
     Prt box_mid
-    GoXY 14, 14
+    GoXY 10, 14
     Prt box_mid
-    GoXY 14, 15
+    GoXY 10, 15
     Prt box_mid
-    GoXY 14, 16
+    GoXY 10, 16
     Prt box_bot
     
+    ; Centered Art relative to box
     GoXY 22, 7
     Prt open_big_1
     GoXY 22, 8
@@ -227,87 +235,114 @@ opening_screen:
 ; =============================================================
 start_screen:
     Cls
-    GoXY 14, 6
+    ; --- Draw UI Box (Expanded Height for spacing) ---
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 7
+    GoXY 10, 6
     Prt box_mid
-    GoXY 14, 8
+    GoXY 10, 7
+    Prt box_mid
+    GoXY 10, 8
     Prt box_mid 
-    GoXY 14, 9
+    GoXY 10, 9
     Prt box_mid 
-    GoXY 14, 10
+    GoXY 10, 10
     Prt box_mid 
-    GoXY 14, 11
+    GoXY 10, 11
     Prt box_mid 
-    GoXY 14, 12
+    GoXY 10, 12
     Prt box_mid 
-    GoXY 14, 13
+    GoXY 10, 13
+    Prt box_mid
+    GoXY 10, 14
+    Prt box_mid
+    GoXY 10, 15
+    Prt box_mid
+    GoXY 10, 16
     Prt box_bot
     
-    GoXY 20, 7
+    ; --- Account Counter (Upper Right) ---
+    GoXY 54, 6      ; Position inside the box, top right
+    Prt txt_acc_lbl
+    xor ax, ax
+    mov al, acc_count
+    call print_num_proc
+    Prt txt_acc_max
+    
+    ; --- Content ---
+    GoXY 25, 8
     Prt app_title
-    GoXY 14, 9
+    
+    GoXY 10, 10
     Prt txt_land_1
-    GoXY 14, 10
+    GoXY 10, 11
     Prt txt_land_2
-    GoXY 14, 11
+    GoXY 10, 12
     Prt txt_land_3
-    GoXY 14, 12
+    
+    GoXY 10, 14
     Prt txt_land_p
     
     mov ah, 01h 
     int 21h
     
-    cmp al, 13 
-    je start_invalid
+    ; --- Safe Jumping Logic ---
     cmp al, '1'
-    jl start_invalid
-    cmp al, '3'
-    jg start_invalid
-    
-    cmp al, '1'
-    je go_login_jump
+    je safe_go_login
     cmp al, '2'
-    je go_signup_jump
+    je safe_go_signup
     cmp al, '3'
-    je go_exit_jump
+    je safe_go_exit
+    jmp start_invalid
+
+safe_go_login:
+    jmp login_page
+safe_go_signup:
+    jmp signup_page
+safe_go_exit:
+    jmp exit_dos
     
 start_invalid:
-    GoXY 14, 15
+    GoXY 10, 18
     Prt msg_inv_sel
     mov ah, 07h
     int 21h
     jmp start_screen
-
-go_login_jump:
-    jmp login_page
-go_signup_jump:
-    jmp signup_page
-go_exit_jump:
-    jmp exit_dos
 
 ; =============================================================
 ; SIGN UP
 ; =============================================================
 signup_page:
     Cls
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt head_signup
-    GoXY 14, 8
+    GoXY 10, 8
+    Prt box_mid
+    GoXY 10, 9
+    Prt box_mid
+    GoXY 10, 10
+    Prt box_mid
+    GoXY 10, 11
+    Prt box_mid
+    GoXY 10, 12
+    Prt box_mid
+    GoXY 10, 13
+    Prt box_mid
+    GoXY 10, 14
     Prt box_bot
     
     mov al, acc_count
     cmp al, MAX_USERS
     jl proceed_signup
-    GoXY 14, 10
+    GoXY 10, 16
     Prt msg_full
     mov ah, 07h
     int 21h
@@ -315,7 +350,7 @@ signup_page:
 
 proceed_signup:
 get_user_create:
-    GoXY 14, 10
+    GoXY 14, 9
     Prt txt_user
     lea dx, in_user_buf
     mov ah, 0Ah
@@ -324,7 +359,7 @@ get_user_create:
     call strip_whitespace_proc
     cmp in_user_buf+1, 0
     jne check_dupe
-    GoXY 14, 12
+    GoXY 14, 15
     Prt msg_empty
     mov ah, 07h
     int 21h
@@ -333,13 +368,13 @@ check_dupe:
     call check_duplicate_proc
     cmp is_duplicate, 1
     jne get_pass_create
-    GoXY 14, 12
+    GoXY 14, 15
     Prt msg_dup
     mov ah, 07h
     int 21h
     jmp signup_page
 get_pass_create:
-    GoXY 14, 12
+    GoXY 14, 11
     Prt txt_pass
     lea dx, in_pass_buf
     mov ah, 0Ah
@@ -348,7 +383,7 @@ get_pass_create:
     call strip_whitespace_proc
     cmp in_pass_buf+1, 0
     jne save_acc
-    GoXY 14, 14
+    GoXY 14, 15
     Prt msg_empty
     mov ah, 07h
     int 21h
@@ -384,7 +419,7 @@ save_acc:
     cld
     rep movsb
     inc acc_count
-    GoXY 14, 15
+    GoXY 14, 16
     Prt msg_created
     mov ah, 07h
     int 21h
@@ -395,20 +430,32 @@ save_acc:
 ; =============================================================
 login_page:
     Cls
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt head_login
-    GoXY 14, 8
+    GoXY 10, 8
+    Prt box_mid
+    GoXY 10, 9
+    Prt box_mid
+    GoXY 10, 10
+    Prt box_mid
+    GoXY 10, 11
+    Prt box_mid
+    GoXY 10, 12
+    Prt box_mid
+    GoXY 10, 13
+    Prt box_mid
+    GoXY 10, 14
     Prt box_bot
     
-    GoXY 14, 10
+    GoXY 14, 9
     Prt txt_user
     lea dx, in_user_buf
     mov ah, 0Ah
@@ -416,7 +463,7 @@ login_page:
     lea bx, in_user_buf
     call strip_whitespace_proc
     
-    GoXY 14, 12
+    GoXY 14, 11
     Prt txt_pass
     lea dx, in_pass_buf
     mov ah, 0Ah
@@ -462,14 +509,12 @@ search_loop:
     jne login_fail_j
     
     ; --- LOGIN SUCCESS ---
-    ; 1. Set current user ID
     mov al, curr_chk_idx
     mov current_user_id, al
     
-    ; 2. Load Cart from Storage
     call load_cart_proc
     
-    GoXY 14, 15
+    GoXY 14, 16
     Prt msg_ok
     mov ah, 07h
     int 21h
@@ -479,7 +524,7 @@ next_iter:
     inc curr_chk_idx
     jmp search_loop
 login_fail_j:
-    GoXY 14, 15
+    GoXY 14, 16
     Prt msg_fail
     mov ah, 07h
     int 21h
@@ -492,50 +537,57 @@ main_menu_page:
     Cls
     call draw_hud_proc
     
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt head_menu
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_mid
-    GoXY 14, 9
+    GoXY 10, 9
     Prt menu_1
-    GoXY 14, 10
+    GoXY 10, 10
     Prt menu_2
-    GoXY 14, 11
+    GoXY 10, 11
     Prt menu_3
-    GoXY 14, 12
+    GoXY 10, 12
     Prt menu_4
-    GoXY 14, 13
+    GoXY 10, 13
     Prt menu_5
-    GoXY 14, 14
+    GoXY 10, 14
     Prt box_mid
-    GoXY 14, 15
+    GoXY 10, 15
     Prt menu_sel
-    GoXY 14, 16
+    GoXY 10, 16
     Prt box_bot
     
-    GoXY 32, 15
+    GoXY 28, 15
     mov ah, 01h
     int 21h
     
+    ; --- Safe Jumps ---
     cmp al, '1'
-    je t_order
-    cmp al, '2'
-    je t_view
-    cmp al, '3'
-    je t_clear
-    cmp al, '4'
-    je t_buy
-    cmp al, '5'
-    je t_logout
+    jne s_2
+    jmp t_order
+s_2: cmp al, '2'
+    jne s_3
+    jmp t_view
+s_3: cmp al, '3'
+    jne s_4
+    jmp t_clear
+s_4: cmp al, '4'
+    jne s_5
+    jmp t_buy
+s_5: cmp al, '5'
+    jne s_err
+    jmp t_logout
     
+s_err:
     GoXY 14, 18
     Prt msg_inv_sel
     mov ah, 07h
@@ -552,8 +604,8 @@ t_logout: jmp logout_logic
 ; LOGOUT LOGIC (SAVE CART)
 ; =============================================================
 logout_logic:
-    call save_cart_proc ; Save current RAM cart to DB
-    call clear_active_cart ; Wipe RAM for safety
+    call save_cart_proc 
+    call clear_active_cart
     
     GoXY 14, 18
     Prt msg_saved
@@ -568,50 +620,56 @@ select_order_page:
     Cls
     call draw_hud_proc
     
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt head_cats
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_mid
-    GoXY 14, 9
+    GoXY 10, 9
     Prt cat_1
-    GoXY 14, 10
+    GoXY 10, 10
     Prt cat_2
-    GoXY 14, 11
+    GoXY 10, 11
     Prt cat_3
-    GoXY 14, 12
+    GoXY 10, 12
     Prt cat_4
-    GoXY 14, 13
+    GoXY 10, 13
     Prt cat_5
-    GoXY 14, 14
+    GoXY 10, 14
     Prt box_mid
-    GoXY 14, 15
+    GoXY 10, 15
     Prt menu_sel
-    GoXY 14, 16
+    GoXY 10, 16
     Prt box_bot
     
-    GoXY 32, 15
+    GoXY 28, 15
     mov ah, 01h
     int 21h
     
     cmp al, '1'
-    je c_2
-    cmp al, '2'
-    je c_3
-    cmp al, '3'
-    je c_4
-    cmp al, '4'
-    je c_5
-    cmp al, '5'
-    je c_back
+    jne cc_2
+    jmp c_2
+cc_2: cmp al, '2'
+    jne cc_3
+    jmp c_3
+cc_3: cmp al, '3'
+    jne cc_4
+    jmp c_4
+cc_4: cmp al, '4'
+    jne cc_5
+    jmp c_5
+cc_5: cmp al, '5'
+    jne cc_err
+    jmp c_back
     
+cc_err:
     GoXY 14, 18
     Prt msg_inv_sel
     mov ah, 07h
@@ -630,19 +688,19 @@ c_back: jmp main_menu_page
 proc_main_dish:
     Cls
     call draw_hud_proc
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt str_mains
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_bot
-    GoXY 14, 10
+    GoXY 10, 10
     Prt txt_pick
     mov ah, 01h
     int 21h
@@ -667,19 +725,19 @@ md3: mov di, 2
 proc_snacks:
     Cls
     call draw_hud_proc
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt str_snacks
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_bot
-    GoXY 14, 10
+    GoXY 10, 10
     Prt txt_pick
     mov ah, 01h
     int 21h
@@ -703,19 +761,19 @@ sn3: mov di, 5
 proc_desserts:
     Cls
     call draw_hud_proc
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt str_desrt
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_bot
-    GoXY 14, 10
+    GoXY 10, 10
     Prt txt_pick
     mov ah, 01h
     int 21h
@@ -739,19 +797,19 @@ ds3: mov di, 8
 proc_drinks:
     Cls
     call draw_hud_proc
-    GoXY 14, 5
+    GoXY 10, 5
     Prt box_top
-    GoXY 14, 6
+    GoXY 10, 6
     Prt box_mid
-    GoXY 20, 6
+    GoXY 25, 6
     Prt app_title
-    GoXY 14, 7
+    GoXY 10, 7
     Prt box_mid
-    GoXY 14, 7
+    GoXY 10, 7
     Prt str_drnks
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_bot
-    GoXY 14, 10
+    GoXY 10, 10
     Prt txt_pick
     mov ah, 01h
     int 21h
@@ -784,7 +842,7 @@ go_calc:
     mov selected_idx, di
     mov current_price, bx
     
-    GoXY 14, 12
+    GoXY 10, 12
     Prt txt_qty
     
     lea dx, in_qty_buf
@@ -899,7 +957,7 @@ budget_error:
 view_order_page:
     Cls
     call draw_hud_proc
-    GoXY 20, 2
+    GoXY 25, 2
     Prt app_title
     GoXY 14, 3
     Prt head_cart
@@ -988,7 +1046,7 @@ buy_order_page:
     jmp main_menu_page
 
 ask_confirm:
-    GoXY 20, 5
+    GoXY 25, 5
     Prt app_title
     GoXY 14, 8
     Prt str_total
@@ -1016,7 +1074,7 @@ cancel_buy:
 
 do_buy:
     Cls
-    GoXY 20, 5
+    GoXY 25, 5
     Prt app_title
     GoXY 14, 6
     Prt head_rcpt
@@ -1040,15 +1098,15 @@ do_buy:
 ; =============================================================
 exit_dos:
     Cls
-    GoXY 14, 8
+    GoXY 10, 8
     Prt box_top
-    GoXY 14, 9
+    GoXY 10, 9
     Prt box_mid
-    GoXY 14, 10
+    GoXY 10, 10
     Prt box_mid
-    GoXY 14, 11
+    GoXY 10, 11
     Prt box_mid
-    GoXY 14, 12
+    GoXY 10, 12
     Prt box_bot
     
     GoXY 22, 10
@@ -1155,10 +1213,6 @@ load_cart_proc proc
     rep movsb
     
     ; 2. Copy total_bill (Word)
-    ; SI is now at db_carts + offset + 12
-    ; Need to reload SI carefully? 
-    ; Actually rep movsb advanced SI by 12.
-    ; SI points to byte 12 (Total Bill low byte)
     lea si, db_carts
     xor ax, ax
     mov al, current_user_id
